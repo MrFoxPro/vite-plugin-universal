@@ -28,6 +28,9 @@ solidSsgPages({
   solidPluginOptionsRef: solidOptions,
 })
 ```
+- Place <!--ssr-outlet--> in your html.
+- Export `render` function that return fragment, e.g. `export const render = () => renderToStringAsync(Blog)`
+
 
 In dev mode, `localhost:3000/blog` will serve `./blog/blog.html` page.
 In production, `./blog/blog.html` will be placed at `dist/blog.html`.
