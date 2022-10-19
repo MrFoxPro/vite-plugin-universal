@@ -2,7 +2,7 @@ This plugin allows to render certain pages statically and serve them on specific
 
 `pnpm i -D vite-solid-ssg-pages`
 
-Imagine you want to deploy blog alogside with app
+Imagine you want to deploy blog alongside with app
 
 - Add input to rollup options:
 
