@@ -1,4 +1,6 @@
 This plugin allows to configure rendering of certain pages in SSG, in SSG + JS mode and serve them on specific paths.
+If you're familiar with vite-plugin-ssr, it's simple replacement for it.
+
 
 `pnpm i -D vite-plugin-universal`
 
