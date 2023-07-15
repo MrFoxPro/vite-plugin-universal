@@ -2,8 +2,7 @@ This plugin allows to configure rendering of certain pages in SSG, in SSG + JS m
 
 `pnpm i -D vite-plugin-universal`
 
-- Add plugin:
-
+Example configuration:
 ```ts
 ViteUniversalPagesPlugin<{ head: string[]; body: string[] }>({
   entries: [
@@ -30,4 +29,18 @@ ViteUniversalPagesPlugin<{ head: string[]; body: string[] }>({
   },
 }),
 ```
-
+Will produce following build output:
+```
+dist
+ ┣ assets
+ ┃ ┣ app.css
+ ┃ ┣ logo.svg
+ ┃ ┗ web.js
+ ┣ nested
+ ┃ ┗ civet.html
+ ┣ app.js
+ ┣ blog.html
+ ┣ civet.js
+ ┗ index.html
+```
+Check out example to see how it works.
