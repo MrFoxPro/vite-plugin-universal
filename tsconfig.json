@@ -1,16 +1,22 @@
 {
-  "compilerOptions": {
-    "emitDeclarationOnly": true,
-    "declaration": true,
-    "sourceMap": false,
-    "target": "ESNext",
-    "module": "ESNext",
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "Node",
-    "skipDefaultLibCheck": true,
-    "declarationDir": "./dist"
-  },
-  "exclude": ["node_modules", "dist", "./example"],
-  "include": ["./src/"]
+   "compilerOptions": {
+      "baseUrl": ".",
+      "declaration": true,
+      "emitDeclarationOnly": true,
+      "declarationDir": "./dist",
+      "sourceMap": false,
+      "target": "ESNext",
+      "module": "ESNext",
+      "forceConsistentCasingInFileNames": true,
+      "moduleResolution": "Bundler",
+      "allowSyntheticDefaultImports": false,
+      "resolvePackageJsonImports": true,
+      "resolvePackageJsonExports": true,
+      "skipDefaultLibCheck": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "strictFunctionTypes": true,
+   },
+   "exclude": ["node_modules", "dist", "./examples"],
+   "include": ["index.ts"]
 }

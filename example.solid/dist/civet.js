@@ -1,0 +1,1 @@
+import{c as t,a as e,g as n,o as r,t as a,h as o}from"./assets/web.js";const u=a("<h1>Learn Civet"),c=function(){return[counter,setCounter]=t(0),e(function(){return interval=setInterval(function(){return setCounter(counter(function(){return counter+1}))},1e3),r(function(){return clearInterval(interval)})}),n(u)};o(c,document.body);

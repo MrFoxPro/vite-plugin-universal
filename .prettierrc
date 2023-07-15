@@ -4,5 +4,8 @@
   "singleQuote": true,
   "semi": false,
   "useTabs": false,
-  "trailingComma": "es5"
+  "trailingComma": "es5",
+  "embeddedLanguageFormatting": "auto",
+  "arrowParens": "avoid",
+  "proseWrap": "never"
 }

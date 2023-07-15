@@ -3,6 +3,7 @@ import type { Component } from 'solid-js'
 import logo from './logo.svg'
 import './app.css'
 import { render } from 'solid-js/web'
+import { hydrate } from 'node_modules/solid-js/web/types/client'
 
 const App: Component = () => {
    return (

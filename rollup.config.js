@@ -1,19 +1,18 @@
-import strip from '@rollup/plugin-strip'
 import babel from '@rollup/plugin-babel'
 import del from 'rollup-plugin-delete'
 
 /** @type {import('rollup').OutputOptions} */
 const output = {}
 /** @type {import('rollup').RollupOptions} */
-const config = {
-   input: './src/index.ts',
+export default {
+   input: './index.ts',
    external: ['vite', 'node:path', 'node:fs/promises'],
    treeshake: 'smallest',
    output: [
       {
          ...output,
-         format: 'es',
-         dir: 'dist/es',
+         format: 'esm',
+         dir: 'dist/esm',
       },
       {
          ...output,
@@ -22,9 +21,6 @@ const config = {
       },
    ],
    plugins: [
-      strip({
-         include: /\.(js|mjs|ts|tsx|jsx)/,
-      }),
       babel({
          extensions: ['.ts'],
          babelHelpers: 'bundled',
@@ -34,4 +30,3 @@ const config = {
       del({ targets: 'dist/*' }),
    ],
 }
-export default config
