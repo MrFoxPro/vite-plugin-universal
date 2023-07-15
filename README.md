@@ -6,7 +6,7 @@ If you're familiar with vite-plugin-ssr, it's simple replacement for it.
 
 Example configuration:
 ```ts
-ViteUniversalPagesPlugin<{ head: string[]; body: string[] }>({
+ViteUniversalPlugin<{ head: string[]; body: string[] }>({
   entries: [
       {
         ssrEntry: 'blog/blog.tsx',

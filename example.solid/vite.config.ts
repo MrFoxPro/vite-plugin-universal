@@ -8,7 +8,7 @@ import RollupMdx from '@mdx-js/rollup'
 import VitePluginCivet from 'vite-plugin-civet'
 import VitePluginInspect from 'vite-plugin-inspect'
 
-import ViteUniversalPagesPlugin from '../index'
+import ViteUniversalPlugin from '../index'
 export default async ({ mode }: ConfigEnv) => {
    const dev = mode === 'development'
 
@@ -43,7 +43,7 @@ export default async ({ mode }: ConfigEnv) => {
             extensions: ['.md', '.mdx', '.ts', '.tsx'],
             ssr: true,
          }),
-         ViteUniversalPagesPlugin<{ head: string[]; body: string[] }>({
+         ViteUniversalPlugin<{ head: string[]; body: string[] }>({
             entries: [
                {
                   ssrEntry: 'blog/blog.tsx',
