@@ -27,9 +27,9 @@
    ],
    "author": "foxpro tuningiposadka@gmail.com",
    "license": "MIT",
-   "homepage": "https://github.com/MrFoxPro/vite-solid-ssg-pages",
+   "homepage": "https://github.com/MrFoxPro/vite-plugin-universal",
    "bugs": {
-      "url": "https://github.com/MrFoxPro/vite-solid-ssg-pages/issues"
+      "url": "https://github.com/MrFoxPro/vite-plugin-universal/issues"
    },
    "peerDependencies": {
       "vite": "^4"
