@@ -44,3 +44,5 @@ dist
  ┗ index.html
 ```
 Check out example to see how it works.
+
+Also, make sure to specify absolute paths to assets and modules in your html templates and ensure you have `base: '/'` in your Vite configuration.
