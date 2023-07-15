@@ -77,6 +77,7 @@ export default async ({ mode }: ConfigEnv) => {
          modulePreload: {
             polyfill: false,
          },
+         minify: false,
          rollupOptions: {
             output: {
                entryFileNames: `[name].js`,

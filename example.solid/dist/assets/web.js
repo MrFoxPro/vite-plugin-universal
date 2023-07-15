@@ -1,1 +1,600 @@
-const r={context:void 0,registry:void 0};function V(e){r.context=e}const W=(e,t)=>e===t,L={equals:W};let O=Y;const y=1,A=2,k={owned:null,cleanups:null,context:null,owner:null};var h=null;let U=null,u=null,d=null,g=null,m=0;function G(e,t){const s=u,n=h,i=e.length===0,o=i?k:{owned:null,cleanups:null,context:null,owner:t===void 0?n:t},f=i?e:()=>e(()=>$(()=>T(o)));h=o,u=null;try{return x(f,!0)}finally{u=s,h=n}}function le(e,t){t=t?Object.assign({},L,t):L;const s={value:e,observers:null,observerSlots:null,comparator:t.equals||void 0},n=i=>(typeof i=="function"&&(i=i(s.value)),F(s,i));return[K.bind(s),n]}function H(e,t,s){const n=R(e,t,!1,y);N(n)}function oe(e,t,s){O=X;const n=R(e,t,!1,y);(!s||!s.render)&&(n.user=!0),g?g.push(n):N(n)}function $(e){if(u===null)return e();const t=u;u=null;try{return e()}finally{u=t}}function fe(e){return h===null||(h.cleanups===null?h.cleanups=[e]:h.cleanups.push(e)),e}function K(){if(this.sources&&this.state)if(this.state===y)N(this);else{const e=d;d=null,x(()=>C(this),!1),d=e}if(u){const e=this.observers?this.observers.length:0;u.sources?(u.sources.push(this),u.sourceSlots.push(e)):(u.sources=[this],u.sourceSlots=[e]),this.observers?(this.observers.push(u),this.observerSlots.push(u.sources.length-1)):(this.observers=[u],this.observerSlots=[u.sources.length-1])}return this.value}function F(e,t,s){let n=e.value;return(!e.comparator||!e.comparator(n,t))&&(e.value=t,e.observers&&e.observers.length&&x(()=>{for(let i=0;i<e.observers.length;i+=1){const o=e.observers[i],f=U&&U.running;f&&U.disposed.has(o),(f?!o.tState:!o.state)&&(o.pure?d.push(o):g.push(o),o.observers&&_(o)),f||(o.state=y)}if(d.length>1e6)throw d=[],new Error},!1)),t}function N(e){if(!e.fn)return;T(e);const t=h,s=u,n=m;u=h=e,Q(e,e.value,n),u=s,h=t}function Q(e,t,s){let n;try{n=e.fn(t)}catch(i){return e.pure&&(e.state=y,e.owned&&e.owned.forEach(T),e.owned=null),e.updatedAt=s+1,j(i)}(!e.updatedAt||e.updatedAt<=s)&&(e.updatedAt!=null&&"observers"in e?F(e,n):e.value=n,e.updatedAt=s)}function R(e,t,s,n=y,i){const o={fn:e,state:n,updatedAt:null,owned:null,sources:null,sourceSlots:null,cleanups:null,value:t,owner:h,context:null,pure:s};return h===null||h!==k&&(h.owned?h.owned.push(o):h.owned=[o]),o}function S(e){if(e.state===0)return;if(e.state===A)return C(e);if(e.suspense&&$(e.suspense.inFallback))return e.suspense.effects.push(e);const t=[e];for(;(e=e.owner)&&(!e.updatedAt||e.updatedAt<m);)e.state&&t.push(e);for(let s=t.length-1;s>=0;s--)if(e=t[s],e.state===y)N(e);else if(e.state===A){const n=d;d=null,x(()=>C(e,t[0]),!1),d=n}}function x(e,t){if(d)return e();let s=!1;t||(d=[]),g?s=!0:g=[],m++;try{const n=e();return J(s),n}catch(n){s||(g=null),d=null,j(n)}}function J(e){if(d&&(Y(d),d=null),e)return;const t=g;g=null,t.length&&x(()=>O(t),!1)}function Y(e){for(let t=0;t<e.length;t++)S(e[t])}function X(e){let t,s=0;for(t=0;t<e.length;t++){const n=e[t];n.user?e[s++]=n:S(n)}if(r.context){if(r.count){r.effects||(r.effects=[]),r.effects.push(...e.slice(0,s));return}else r.effects&&(e=[...r.effects,...e],s+=r.effects.length,delete r.effects);V()}for(t=0;t<s;t++)S(e[t])}function C(e,t){e.state=0;for(let s=0;s<e.sources.length;s+=1){const n=e.sources[s];if(n.sources){const i=n.state;i===y?n!==t&&(!n.updatedAt||n.updatedAt<m)&&S(n):i===A&&C(n,t)}}}function _(e){for(let t=0;t<e.observers.length;t+=1){const s=e.observers[t];s.state||(s.state=A,s.pure?d.push(s):g.push(s),s.observers&&_(s))}}function T(e){let t;if(e.sources)for(;e.sources.length;){const s=e.sources.pop(),n=e.sourceSlots.pop(),i=s.observers;if(i&&i.length){const o=i.pop(),f=s.observerSlots.pop();n<i.length&&(o.sourceSlots[f]=n,i[n]=o,s.observerSlots[n]=f)}}if(e.owned){for(t=e.owned.length-1;t>=0;t--)T(e.owned[t]);e.owned=null}if(e.cleanups){for(t=e.cleanups.length-1;t>=0;t--)e.cleanups[t]();e.cleanups=null}e.state=0,e.context=null}function Z(e){return e instanceof Error?e:new Error(typeof e=="string"?e:"Unknown error",{cause:e})}function j(e,t=h){throw Z(e)}let q=!1;function z(){q=!0}function ee(e,t,s){let n=s.length,i=t.length,o=n,f=0,l=0,c=t[i-1].nextSibling,a=null;for(;f<i||l<o;){if(t[f]===s[l]){f++,l++;continue}for(;t[i-1]===s[o-1];)i--,o--;if(i===f){const p=o<n?l?s[l-1].nextSibling:s[o-l]:c;for(;l<o;)e.insertBefore(s[l++],p)}else if(o===l)for(;f<i;)(!a||!a.has(t[f]))&&t[f].remove(),f++;else if(t[f]===s[o-1]&&s[l]===t[i-1]){const p=t[--i].nextSibling;e.insertBefore(s[l++],t[f++].nextSibling),e.insertBefore(s[--o],p),t[i]=s[o]}else{if(!a){a=new Map;let w=l;for(;w<o;)a.set(s[w],w++)}const p=a.get(t[f]);if(p!=null)if(l<p&&p<o){let w=f,v=1,M;for(;++w<i&&w<o&&!((M=a.get(t[w]))==null||M!==p+v);)v++;if(v>p-l){const P=t[f];for(;l<p;)e.insertBefore(s[l++],P)}else e.replaceChild(s[l++],t[f++])}else f++;else t[f++].remove()}}}function te(e,t,s,n={}){let i;return G(o=>{i=o,t===document?e():se(t,e(),t.firstChild?null:void 0,s)},n.owner),()=>{i(),t.textContent=""}}function re(e,t,s){let n;const i=()=>{const f=document.createElement("template");return f.innerHTML=e,s?f.content.firstChild.firstChild:f.content.firstChild},o=t?()=>$(()=>document.importNode(n||(n=i()),!0)):()=>(n||(n=i())).cloneNode(!0);return o.cloneNode=o,o}function ue(e,t,s){s==null?e.removeAttribute(t):e.setAttribute(t,s)}function se(e,t,s,n){if(s!==void 0&&!n&&(n=[]),typeof t!="function")return E(e,t,n,s);H(i=>E(e,t(),i,s),n)}function ne(e,t,s={}){r.completed=globalThis._$HY.completed,r.events=globalThis._$HY.events,r.load=globalThis._$HY.load,r.gather=i=>I(t,i),r.registry=new Map,r.context={id:s.renderId||"",count:0},I(t,s.renderId);const n=te(e,t,[...t.childNodes],s);return r.context=null,n}function ce(e){let t,s;if(!r.context||!(t=r.registry.get(s=ie()))){if(r.context&&console.warn("Unable to find DOM nodes for hydration key:",s),!e)throw new Error("Unrecoverable Hydration Mismatch. No template for key: "+s);return e()}return r.completed&&r.completed.add(t),r.registry.delete(s),t}function ae(e){let t=e,s=0,n=[];if(r.context)for(;t;){if(t.nodeType===8){const i=t.nodeValue;if(i==="#")s++;else if(i==="/"){if(s===0)return[t,n];s--}}n.push(t),t=t.nextSibling}return[t,n]}function E(e,t,s,n,i){if(r.context){!s&&(s=[...e.childNodes]);let l=[];for(let c=0;c<s.length;c++){const a=s[c];a.nodeType===8&&a.data.slice(0,2)==="!$"?a.remove():l.push(a)}s=l}for(;typeof s=="function";)s=s();if(t===s)return s;const o=typeof t,f=n!==void 0;if(e=f&&s[0]&&s[0].parentNode||e,o==="string"||o==="number"){if(r.context)return s;if(o==="number"&&(t=t.toString()),f){let l=s[0];l&&l.nodeType===3?l.data=t:l=document.createTextNode(t),s=b(e,s,n,l)}else s!==""&&typeof s=="string"?s=e.firstChild.data=t:s=e.textContent=t}else if(t==null||o==="boolean"){if(r.context)return s;s=b(e,s,n)}else{if(o==="function")return H(()=>{let l=t();for(;typeof l=="function";)l=l();s=E(e,l,s,n)}),()=>s;if(Array.isArray(t)){const l=[],c=s&&Array.isArray(s);if(B(l,t,s,i))return H(()=>s=E(e,l,s,n,!0)),()=>s;if(r.context){if(!l.length)return s;for(let a=0;a<l.length;a++)if(l[a].parentNode)return s=l}if(l.length===0){if(s=b(e,s,n),f)return s}else c?s.length===0?D(e,l,n):ee(e,s,l):(s&&b(e),D(e,l));s=l}else if(t.nodeType){if(r.context&&t.parentNode)return s=f?[t]:t;if(Array.isArray(s)){if(f)return s=b(e,s,n,t);b(e,s,null,t)}else s==null||s===""||!e.firstChild?e.appendChild(t):e.replaceChild(t,e.firstChild);s=t}else console.warn("Unrecognized value. Skipped inserting",t)}return s}function B(e,t,s,n){let i=!1;for(let o=0,f=t.length;o<f;o++){let l=t[o],c=s&&s[o],a;if(!(l==null||l===!0||l===!1))if((a=typeof l)=="object"&&l.nodeType)e.push(l);else if(Array.isArray(l))i=B(e,l,c)||i;else if(a==="function")if(n){for(;typeof l=="function";)l=l();i=B(e,Array.isArray(l)?l:[l],Array.isArray(c)?c:[c])||i}else e.push(l),i=!0;else{const p=String(l);c&&c.nodeType===3&&c.data===p?e.push(c):e.push(document.createTextNode(p))}}return i}function D(e,t,s=null){for(let n=0,i=t.length;n<i;n++)e.insertBefore(t[n],s)}function b(e,t,s,n){if(s===void 0)return e.textContent="";const i=n||document.createTextNode("");if(t.length){let o=!1;for(let f=t.length-1;f>=0;f--){const l=t[f];if(i!==l){const c=l.parentNode===e;!o&&!f?c?e.replaceChild(i,l):e.insertBefore(i,s):c&&l.remove()}else o=!0}}else e.insertBefore(i,s);return[i]}function I(e,t){const s=e.querySelectorAll("*[data-hk]");for(let n=0;n<s.length;n++){const i=s[n],o=i.getAttribute("data-hk");(!t||o.startsWith(t))&&!r.registry.has(o)&&r.registry.set(o,i)}}function ie(){const e=r.context;return`${e.id}${e.count++}`}const he=(...e)=>(z(),ne(...e));export{oe as a,ae as b,le as c,ce as g,he as h,se as i,fe as o,te as r,ue as s,re as t};
+const sharedConfig = {
+  context: undefined,
+  registry: undefined
+};
+function setHydrateContext(context) {
+  sharedConfig.context = context;
+}
+
+const equalFn = (a, b) => a === b;
+const signalOptions = {
+  equals: equalFn
+};
+let runEffects = runQueue;
+const STALE = 1;
+const PENDING = 2;
+const UNOWNED = {
+  owned: null,
+  cleanups: null,
+  context: null,
+  owner: null
+};
+var Owner = null;
+let Transition = null;
+let Listener = null;
+let Updates = null;
+let Effects = null;
+let ExecCount = 0;
+function createRoot(fn, detachedOwner) {
+  const listener = Listener,
+    owner = Owner,
+    unowned = fn.length === 0,
+    root = unowned ? UNOWNED : {
+      owned: null,
+      cleanups: null,
+      context: null,
+      owner: detachedOwner === undefined ? owner : detachedOwner
+    },
+    updateFn = unowned ? fn : () => fn(() => untrack(() => cleanNode(root)));
+  Owner = root;
+  Listener = null;
+  try {
+    return runUpdates(updateFn, true);
+  } finally {
+    Listener = listener;
+    Owner = owner;
+  }
+}
+function createSignal(value, options) {
+  options = options ? Object.assign({}, signalOptions, options) : signalOptions;
+  const s = {
+    value,
+    observers: null,
+    observerSlots: null,
+    comparator: options.equals || undefined
+  };
+  const setter = value => {
+    if (typeof value === "function") {
+      value = value(s.value);
+    }
+    return writeSignal(s, value);
+  };
+  return [readSignal.bind(s), setter];
+}
+function createRenderEffect(fn, value, options) {
+  const c = createComputation(fn, value, false, STALE);
+  updateComputation(c);
+}
+function createEffect(fn, value, options) {
+  runEffects = runUserEffects;
+  const c = createComputation(fn, value, false, STALE);
+  if (!options || !options.render) c.user = true;
+  Effects ? Effects.push(c) : updateComputation(c);
+}
+function untrack(fn) {
+  if (Listener === null) return fn();
+  const listener = Listener;
+  Listener = null;
+  try {
+    return fn();
+  } finally {
+    Listener = listener;
+  }
+}
+function onCleanup(fn) {
+  if (Owner === null) ;else if (Owner.cleanups === null) Owner.cleanups = [fn];else Owner.cleanups.push(fn);
+  return fn;
+}
+function readSignal() {
+  if (this.sources && (this.state)) {
+    if ((this.state) === STALE) updateComputation(this);else {
+      const updates = Updates;
+      Updates = null;
+      runUpdates(() => lookUpstream(this), false);
+      Updates = updates;
+    }
+  }
+  if (Listener) {
+    const sSlot = this.observers ? this.observers.length : 0;
+    if (!Listener.sources) {
+      Listener.sources = [this];
+      Listener.sourceSlots = [sSlot];
+    } else {
+      Listener.sources.push(this);
+      Listener.sourceSlots.push(sSlot);
+    }
+    if (!this.observers) {
+      this.observers = [Listener];
+      this.observerSlots = [Listener.sources.length - 1];
+    } else {
+      this.observers.push(Listener);
+      this.observerSlots.push(Listener.sources.length - 1);
+    }
+  }
+  return this.value;
+}
+function writeSignal(node, value, isComp) {
+  let current = node.value;
+  if (!node.comparator || !node.comparator(current, value)) {
+    node.value = value;
+    if (node.observers && node.observers.length) {
+      runUpdates(() => {
+        for (let i = 0; i < node.observers.length; i += 1) {
+          const o = node.observers[i];
+          const TransitionRunning = Transition && Transition.running;
+          if (TransitionRunning && Transition.disposed.has(o)) ;
+          if (TransitionRunning ? !o.tState : !o.state) {
+            if (o.pure) Updates.push(o);else Effects.push(o);
+            if (o.observers) markDownstream(o);
+          }
+          if (!TransitionRunning) o.state = STALE;
+        }
+        if (Updates.length > 10e5) {
+          Updates = [];
+          if (false) ;
+          throw new Error();
+        }
+      }, false);
+    }
+  }
+  return value;
+}
+function updateComputation(node) {
+  if (!node.fn) return;
+  cleanNode(node);
+  const owner = Owner,
+    listener = Listener,
+    time = ExecCount;
+  Listener = Owner = node;
+  runComputation(node, node.value, time);
+  Listener = listener;
+  Owner = owner;
+}
+function runComputation(node, value, time) {
+  let nextValue;
+  try {
+    nextValue = node.fn(value);
+  } catch (err) {
+    if (node.pure) {
+      {
+        node.state = STALE;
+        node.owned && node.owned.forEach(cleanNode);
+        node.owned = null;
+      }
+    }
+    node.updatedAt = time + 1;
+    return handleError(err);
+  }
+  if (!node.updatedAt || node.updatedAt <= time) {
+    if (node.updatedAt != null && "observers" in node) {
+      writeSignal(node, nextValue);
+    } else node.value = nextValue;
+    node.updatedAt = time;
+  }
+}
+function createComputation(fn, init, pure, state = STALE, options) {
+  const c = {
+    fn,
+    state: state,
+    updatedAt: null,
+    owned: null,
+    sources: null,
+    sourceSlots: null,
+    cleanups: null,
+    value: init,
+    owner: Owner,
+    context: null,
+    pure
+  };
+  if (Owner === null) ;else if (Owner !== UNOWNED) {
+    {
+      if (!Owner.owned) Owner.owned = [c];else Owner.owned.push(c);
+    }
+  }
+  return c;
+}
+function runTop(node) {
+  if ((node.state) === 0) return;
+  if ((node.state) === PENDING) return lookUpstream(node);
+  if (node.suspense && untrack(node.suspense.inFallback)) return node.suspense.effects.push(node);
+  const ancestors = [node];
+  while ((node = node.owner) && (!node.updatedAt || node.updatedAt < ExecCount)) {
+    if (node.state) ancestors.push(node);
+  }
+  for (let i = ancestors.length - 1; i >= 0; i--) {
+    node = ancestors[i];
+    if ((node.state) === STALE) {
+      updateComputation(node);
+    } else if ((node.state) === PENDING) {
+      const updates = Updates;
+      Updates = null;
+      runUpdates(() => lookUpstream(node, ancestors[0]), false);
+      Updates = updates;
+    }
+  }
+}
+function runUpdates(fn, init) {
+  if (Updates) return fn();
+  let wait = false;
+  if (!init) Updates = [];
+  if (Effects) wait = true;else Effects = [];
+  ExecCount++;
+  try {
+    const res = fn();
+    completeUpdates(wait);
+    return res;
+  } catch (err) {
+    if (!wait) Effects = null;
+    Updates = null;
+    handleError(err);
+  }
+}
+function completeUpdates(wait) {
+  if (Updates) {
+    runQueue(Updates);
+    Updates = null;
+  }
+  if (wait) return;
+  const e = Effects;
+  Effects = null;
+  if (e.length) runUpdates(() => runEffects(e), false);
+}
+function runQueue(queue) {
+  for (let i = 0; i < queue.length; i++) runTop(queue[i]);
+}
+function runUserEffects(queue) {
+  let i,
+    userLength = 0;
+  for (i = 0; i < queue.length; i++) {
+    const e = queue[i];
+    if (!e.user) runTop(e);else queue[userLength++] = e;
+  }
+  if (sharedConfig.context) {
+    if (sharedConfig.count) {
+      sharedConfig.effects || (sharedConfig.effects = []);
+      sharedConfig.effects.push(...queue.slice(0, userLength));
+      return;
+    } else if (sharedConfig.effects) {
+      queue = [...sharedConfig.effects, ...queue];
+      userLength += sharedConfig.effects.length;
+      delete sharedConfig.effects;
+    }
+    setHydrateContext();
+  }
+  for (i = 0; i < userLength; i++) runTop(queue[i]);
+}
+function lookUpstream(node, ignore) {
+  node.state = 0;
+  for (let i = 0; i < node.sources.length; i += 1) {
+    const source = node.sources[i];
+    if (source.sources) {
+      const state = source.state;
+      if (state === STALE) {
+        if (source !== ignore && (!source.updatedAt || source.updatedAt < ExecCount)) runTop(source);
+      } else if (state === PENDING) lookUpstream(source, ignore);
+    }
+  }
+}
+function markDownstream(node) {
+  for (let i = 0; i < node.observers.length; i += 1) {
+    const o = node.observers[i];
+    if (!o.state) {
+      o.state = PENDING;
+      if (o.pure) Updates.push(o);else Effects.push(o);
+      o.observers && markDownstream(o);
+    }
+  }
+}
+function cleanNode(node) {
+  let i;
+  if (node.sources) {
+    while (node.sources.length) {
+      const source = node.sources.pop(),
+        index = node.sourceSlots.pop(),
+        obs = source.observers;
+      if (obs && obs.length) {
+        const n = obs.pop(),
+          s = source.observerSlots.pop();
+        if (index < obs.length) {
+          n.sourceSlots[s] = index;
+          obs[index] = n;
+          source.observerSlots[index] = s;
+        }
+      }
+    }
+  }
+  if (node.owned) {
+    for (i = node.owned.length - 1; i >= 0; i--) cleanNode(node.owned[i]);
+    node.owned = null;
+  }
+  if (node.cleanups) {
+    for (i = node.cleanups.length - 1; i >= 0; i--) node.cleanups[i]();
+    node.cleanups = null;
+  }
+  node.state = 0;
+  node.context = null;
+}
+function castError(err) {
+  if (err instanceof Error) return err;
+  return new Error(typeof err === "string" ? err : "Unknown error", {
+    cause: err
+  });
+}
+function handleError(err, owner = Owner) {
+  const error = castError(err);
+  throw error;
+}
+
+let hydrationEnabled = false;
+function enableHydration() {
+  hydrationEnabled = true;
+}
+
+function reconcileArrays(parentNode, a, b) {
+  let bLength = b.length,
+    aEnd = a.length,
+    bEnd = bLength,
+    aStart = 0,
+    bStart = 0,
+    after = a[aEnd - 1].nextSibling,
+    map = null;
+  while (aStart < aEnd || bStart < bEnd) {
+    if (a[aStart] === b[bStart]) {
+      aStart++;
+      bStart++;
+      continue;
+    }
+    while (a[aEnd - 1] === b[bEnd - 1]) {
+      aEnd--;
+      bEnd--;
+    }
+    if (aEnd === aStart) {
+      const node = bEnd < bLength ? bStart ? b[bStart - 1].nextSibling : b[bEnd - bStart] : after;
+      while (bStart < bEnd) parentNode.insertBefore(b[bStart++], node);
+    } else if (bEnd === bStart) {
+      while (aStart < aEnd) {
+        if (!map || !map.has(a[aStart])) a[aStart].remove();
+        aStart++;
+      }
+    } else if (a[aStart] === b[bEnd - 1] && b[bStart] === a[aEnd - 1]) {
+      const node = a[--aEnd].nextSibling;
+      parentNode.insertBefore(b[bStart++], a[aStart++].nextSibling);
+      parentNode.insertBefore(b[--bEnd], node);
+      a[aEnd] = b[bEnd];
+    } else {
+      if (!map) {
+        map = new Map();
+        let i = bStart;
+        while (i < bEnd) map.set(b[i], i++);
+      }
+      const index = map.get(a[aStart]);
+      if (index != null) {
+        if (bStart < index && index < bEnd) {
+          let i = aStart,
+            sequence = 1,
+            t;
+          while (++i < aEnd && i < bEnd) {
+            if ((t = map.get(a[i])) == null || t !== index + sequence) break;
+            sequence++;
+          }
+          if (sequence > index - bStart) {
+            const node = a[aStart];
+            while (bStart < index) parentNode.insertBefore(b[bStart++], node);
+          } else parentNode.replaceChild(b[bStart++], a[aStart++]);
+        } else aStart++;
+      } else a[aStart++].remove();
+    }
+  }
+}
+function render(code, element, init, options = {}) {
+  let disposer;
+  createRoot(dispose => {
+    disposer = dispose;
+    element === document ? code() : insert(element, code(), element.firstChild ? null : undefined, init);
+  }, options.owner);
+  return () => {
+    disposer();
+    element.textContent = "";
+  };
+}
+function template(html, isCE, isSVG) {
+  let node;
+  const create = () => {
+    const t = document.createElement("template");
+    t.innerHTML = html;
+    return isSVG ? t.content.firstChild.firstChild : t.content.firstChild;
+  };
+  const fn = isCE ? () => untrack(() => document.importNode(node || (node = create()), true)) : () => (node || (node = create())).cloneNode(true);
+  fn.cloneNode = fn;
+  return fn;
+}
+function setAttribute(node, name, value) {
+  if (value == null) node.removeAttribute(name);else node.setAttribute(name, value);
+}
+function insert(parent, accessor, marker, initial) {
+  if (marker !== undefined && !initial) initial = [];
+  if (typeof accessor !== "function") return insertExpression(parent, accessor, initial, marker);
+  createRenderEffect(current => insertExpression(parent, accessor(), current, marker), initial);
+}
+function hydrate$1(code, element, options = {}) {
+  sharedConfig.completed = globalThis._$HY.completed;
+  sharedConfig.events = globalThis._$HY.events;
+  sharedConfig.load = globalThis._$HY.load;
+  sharedConfig.gather = root => gatherHydratable(element, root);
+  sharedConfig.registry = new Map();
+  sharedConfig.context = {
+    id: options.renderId || "",
+    count: 0
+  };
+  gatherHydratable(element, options.renderId);
+  const dispose = render(code, element, [...element.childNodes], options);
+  sharedConfig.context = null;
+  return dispose;
+}
+function getNextElement(template) {
+  let node, key;
+  if (!sharedConfig.context || !(node = sharedConfig.registry.get(key = getHydrationKey()))) {
+    if (sharedConfig.context) console.warn("Unable to find DOM nodes for hydration key:", key);
+    if (!template) throw new Error("Unrecoverable Hydration Mismatch. No template for key: " + key);
+    return template();
+  }
+  if (sharedConfig.completed) sharedConfig.completed.add(node);
+  sharedConfig.registry.delete(key);
+  return node;
+}
+function getNextMarker(start) {
+  let end = start,
+    count = 0,
+    current = [];
+  if (sharedConfig.context) {
+    while (end) {
+      if (end.nodeType === 8) {
+        const v = end.nodeValue;
+        if (v === "#") count++;else if (v === "/") {
+          if (count === 0) return [end, current];
+          count--;
+        }
+      }
+      current.push(end);
+      end = end.nextSibling;
+    }
+  }
+  return [end, current];
+}
+function insertExpression(parent, value, current, marker, unwrapArray) {
+  if (sharedConfig.context) {
+    !current && (current = [...parent.childNodes]);
+    let cleaned = [];
+    for (let i = 0; i < current.length; i++) {
+      const node = current[i];
+      if (node.nodeType === 8 && node.data.slice(0, 2) === "!$") node.remove();else cleaned.push(node);
+    }
+    current = cleaned;
+  }
+  while (typeof current === "function") current = current();
+  if (value === current) return current;
+  const t = typeof value,
+    multi = marker !== undefined;
+  parent = multi && current[0] && current[0].parentNode || parent;
+  if (t === "string" || t === "number") {
+    if (sharedConfig.context) return current;
+    if (t === "number") value = value.toString();
+    if (multi) {
+      let node = current[0];
+      if (node && node.nodeType === 3) {
+        node.data = value;
+      } else node = document.createTextNode(value);
+      current = cleanChildren(parent, current, marker, node);
+    } else {
+      if (current !== "" && typeof current === "string") {
+        current = parent.firstChild.data = value;
+      } else current = parent.textContent = value;
+    }
+  } else if (value == null || t === "boolean") {
+    if (sharedConfig.context) return current;
+    current = cleanChildren(parent, current, marker);
+  } else if (t === "function") {
+    createRenderEffect(() => {
+      let v = value();
+      while (typeof v === "function") v = v();
+      current = insertExpression(parent, v, current, marker);
+    });
+    return () => current;
+  } else if (Array.isArray(value)) {
+    const array = [];
+    const currentArray = current && Array.isArray(current);
+    if (normalizeIncomingArray(array, value, current, unwrapArray)) {
+      createRenderEffect(() => current = insertExpression(parent, array, current, marker, true));
+      return () => current;
+    }
+    if (sharedConfig.context) {
+      if (!array.length) return current;
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].parentNode) return current = array;
+      }
+    }
+    if (array.length === 0) {
+      current = cleanChildren(parent, current, marker);
+      if (multi) return current;
+    } else if (currentArray) {
+      if (current.length === 0) {
+        appendNodes(parent, array, marker);
+      } else reconcileArrays(parent, current, array);
+    } else {
+      current && cleanChildren(parent);
+      appendNodes(parent, array);
+    }
+    current = array;
+  } else if (value.nodeType) {
+    if (sharedConfig.context && value.parentNode) return current = multi ? [value] : value;
+    if (Array.isArray(current)) {
+      if (multi) return current = cleanChildren(parent, current, marker, value);
+      cleanChildren(parent, current, null, value);
+    } else if (current == null || current === "" || !parent.firstChild) {
+      parent.appendChild(value);
+    } else parent.replaceChild(value, parent.firstChild);
+    current = value;
+  } else console.warn(`Unrecognized value. Skipped inserting`, value);
+  return current;
+}
+function normalizeIncomingArray(normalized, array, current, unwrap) {
+  let dynamic = false;
+  for (let i = 0, len = array.length; i < len; i++) {
+    let item = array[i],
+      prev = current && current[i],
+      t;
+    if (item == null || item === true || item === false) ; else if ((t = typeof item) === "object" && item.nodeType) {
+      normalized.push(item);
+    } else if (Array.isArray(item)) {
+      dynamic = normalizeIncomingArray(normalized, item, prev) || dynamic;
+    } else if (t === "function") {
+      if (unwrap) {
+        while (typeof item === "function") item = item();
+        dynamic = normalizeIncomingArray(normalized, Array.isArray(item) ? item : [item], Array.isArray(prev) ? prev : [prev]) || dynamic;
+      } else {
+        normalized.push(item);
+        dynamic = true;
+      }
+    } else {
+      const value = String(item);
+      if (prev && prev.nodeType === 3 && prev.data === value) normalized.push(prev);else normalized.push(document.createTextNode(value));
+    }
+  }
+  return dynamic;
+}
+function appendNodes(parent, array, marker = null) {
+  for (let i = 0, len = array.length; i < len; i++) parent.insertBefore(array[i], marker);
+}
+function cleanChildren(parent, current, marker, replacement) {
+  if (marker === undefined) return parent.textContent = "";
+  const node = replacement || document.createTextNode("");
+  if (current.length) {
+    let inserted = false;
+    for (let i = current.length - 1; i >= 0; i--) {
+      const el = current[i];
+      if (node !== el) {
+        const isParent = el.parentNode === parent;
+        if (!inserted && !i) isParent ? parent.replaceChild(node, el) : parent.insertBefore(node, marker);else isParent && el.remove();
+      } else inserted = true;
+    }
+  } else parent.insertBefore(node, marker);
+  return [node];
+}
+function gatherHydratable(element, root) {
+  const templates = element.querySelectorAll(`*[data-hk]`);
+  for (let i = 0; i < templates.length; i++) {
+    const node = templates[i];
+    const key = node.getAttribute("data-hk");
+    if ((!root || key.startsWith(root)) && !sharedConfig.registry.has(key)) sharedConfig.registry.set(key, node);
+  }
+}
+function getHydrationKey() {
+  const hydrate = sharedConfig.context;
+  return `${hydrate.id}${hydrate.count++}`;
+}
+const hydrate = (...args) => {
+  enableHydration();
+  return hydrate$1(...args);
+};
+
+export { createEffect as a, getNextMarker as b, createSignal as c, getNextElement as g, hydrate as h, insert as i, onCleanup as o, render as r, setAttribute as s, template as t };
