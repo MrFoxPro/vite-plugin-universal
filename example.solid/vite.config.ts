@@ -54,7 +54,7 @@ export default async ({ mode }: ConfigEnv) => {
                {
                   ssrEntry: 'civet/entry.civet',
                   templatePath: 'civet/civet.html',
-                  outputPath: 'civet.html',
+                  outputPath: 'nested/civet.html',
                },
                {
                   templatePath: 'app/app.html',
@@ -63,12 +63,6 @@ export default async ({ mode }: ConfigEnv) => {
                   isFallback: true,
                },
             ],
-            // async ssrEntryTransformHook(entry, code, id, options) {
-            //    if (id.endsWith('md')) {
-            //       const res = await mdx.transform(code, id, options)
-            //       return res
-            //    }
-            // },
             applyOutput({ head, body }, template) {
                return template.replace('<!--head-->', head.join('\n')).replace('<!--body-->', body.join('\n'))
             },

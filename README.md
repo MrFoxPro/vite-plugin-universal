@@ -1,71 +1,33 @@
-This plugin allows to render certain pages statically and serve them on specific paths.
+This plugin allows to configure rendering of certain pages in SSG, in SSG + JS mode and serve them on specific paths.
 
-`pnpm i -D vite-solid-ssg-pages`
-
-Imagine you want to deploy blog alongside with app
-
-- Add input to rollup options:
-
-```ts
-input: {
-    app: './index.html',
-    blog: './blog/blog.html',
-},
-```
+`pnpm i -D vite-plugin-universal`
 
 - Add plugin:
 
 ```ts
-solidSsgPages({
+ViteUniversalPagesPlugin<{ head: string[]; body: string[] }>({
   entries: [
-    {
-      htmlPath: './blog/blog.html',
-      ssrEntry: './blog/blog.tsx',
-      urlAlias: '/blog',
-      outputPath: './blog.html',
-    },
-  ],
-  solidPluginOptionsRef: solidOptions,
-})
-```
-- Place `<!--ssr-outlet-->` in your html.
-- Export `render` function that return fragment, e.g. `export const render = () => renderToStringAsync(Blog)`
-
-
-In dev mode, `localhost:3000/blog` will serve `./blog/blog.html` page.
-In production, `./blog/blog.html` will be placed at `dist/blog.html`.
-
-Note: you need to pass reference to solid options! This hack is nescessary.
-
-```tsx
-const solidOptions: Partial<SolidOptions> = {
-  hot: dev,
-  dev: dev,
-  extensions: ['.md', '.mdx'],
-  ssr: true,
-}
-plugins: [
-  solid(solidOptions),
-  solidSsgPages({
-    entries: [
       {
-        htmlPath: './blog/blog.html',
-        ssrEntry: './blog/blog.tsx',
+        ssrEntry: 'blog/blog.tsx',
+        templatePath: 'blog/blog.html',
         urlAlias: '/blog',
-        outputPath: './blog.html',
+        outputPath: 'blog.html',
       },
-    ],
-    solidPluginOptionsRef: solidOptions,
-  }),
-]
-build: {
-    rollupOptions: {
-        input: {
-            app: './index.html',
-            blog: './blog/blog.html',
-        },
-    }
-}
+      {
+        ssrEntry: 'civet/entry.civet',
+        templatePath: 'civet/civet.html',
+        outputPath: 'nested/civet.html',
+      },
+      {
+        templatePath: 'app/app.html',
+        urlAlias: '/',
+        outputPath: 'index.html',
+        isFallback: true,
+      },
+  ],
+  applyOutput({ head, body }, template) {
+      return template.replace('<!--head-->', head.join('\n')).replace('<!--body-->', body.join('\n'))
+  },
+}),
 ```
 
-Checkout [examples](/examples/)
