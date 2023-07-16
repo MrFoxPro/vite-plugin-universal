@@ -12,6 +12,15 @@ import ViteUniversalPlugin from '../index'
 export default async ({ mode }: ConfigEnv) => {
    const dev = mode === 'development'
 
+   const solidOptions: Parameters<typeof ViteSolid>[0] = {
+      hot: dev,
+      dev: dev,
+      extensions: ['.md', '.mdx', '.ts', '.tsx'],
+      solid: {
+         generate: 'dom',
+         hydratable: false,
+      },
+   }
    const config: UserConfig = {
       appType: 'custom',
       base: '/',
@@ -37,12 +46,7 @@ export default async ({ mode }: ConfigEnv) => {
             outputExtension: 'tsx',
             outputTransformerPlugin: 'solid',
          }),
-         ViteSolid({
-            hot: dev,
-            dev: dev,
-            extensions: ['.md', '.mdx', '.ts', '.tsx'],
-            ssr: true,
-         }),
+         ViteSolid(solidOptions),
          ViteUniversalPlugin<{ head: string[]; body: string[] }>({
             entries: [
                {
@@ -65,6 +69,23 @@ export default async ({ mode }: ConfigEnv) => {
             ],
             applyOutput({ head, body }, template) {
                return template.replace('<!--head-->', head.join('\n')).replace('<!--body-->', body.join('\n'))
+            },
+            // options here will contains ssr: true
+            async ssrEntryTransformHook(ctx, server, entry, code, id, options) {
+               // We can do simple hack
+               solidOptions.solid.generate = 'ssr'
+               solidOptions.solid.hydratable = false
+               const result = await server.transformRequest(id, { ssr: true })
+               solidOptions.solid.generate = 'dom'
+               return result
+
+               // Or completely transform code as we need.
+               const solidPlugin = server.config.plugins.find(plugin => plugin.name == 'solid')
+               if (typeof solidPlugin.transform === 'function') {
+                  // Here we can customize transformation of our SSR entry
+                  const transformed = await solidPlugin.transform.call(this, code, id, options)
+                  return transformed
+               }
             },
          }),
          VitePluginInspect(),

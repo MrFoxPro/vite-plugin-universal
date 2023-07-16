@@ -3,8 +3,8 @@ import * as path from 'node:path'
 import * as fs from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { Console } from 'node:console'
-import type { Plugin, ViteDevServer, ResolvedConfig, Logger, InlineConfig, Connect } from 'vite'
-import { createLogger, createServer, mergeConfig, normalizePath } from 'vite'
+import type { Plugin, ViteDevServer, ResolvedConfig, Connect, Rollup } from 'vite'
+import { createLogger, createServer, normalizePath } from 'vite'
 import { glob } from 'glob'
 
 type Entry<TOutput> = {
@@ -43,6 +43,11 @@ type Entry<TOutput> = {
     * Show when route wasn't found (404)
     */
    isFallback?: boolean
+
+   /**
+    * Custom metadata you can pass to entry
+    */
+   meta?: any
 }
 export type EntryConfiguration<T> = Omit<Entry<T>, 'ssrEntry'> & {}
 export type UniversalPluginOptions<TOutput> = {
@@ -52,6 +57,8 @@ export type UniversalPluginOptions<TOutput> = {
     * @returns
     */
    ssrEntryTransformHook?: (
+      ctx: Rollup.PluginContext,
+      server: ViteDevServer,
       entry: Entry<TOutput>,
       // IDK how to infer this cringy Vite type
       ...viteOptions: [
@@ -61,7 +68,7 @@ export type UniversalPluginOptions<TOutput> = {
             ssr?: boolean
          }
       ]
-   ) => Promise<string>
+   ) => Rollup.TransformResult | Promise<Rollup.TransformResult>
 
    /**
     * Entries that will be loaded in SSR mode to render them in HTML
@@ -77,11 +84,14 @@ export type UniversalPluginOptions<TOutput> = {
     */
    applyOutput?: (renderResult: TOutput, template: string) => string | Promise<string>
 
+   /**
+    * Wether not to delete HTML produced by Vite at build time
+    */
    keepOriginalHtml?: boolean
 }
 
 export default function <TOutput = unknown>(options: UniversalPluginOptions<TOutput>): Plugin {
-   type NormalizedEntry<T = TOutput> = Required<Entry<T>> & { transformedHtml?: string }
+   type NormalizedEntry<T = TOutput> = Required<Omit<Entry<T>, "meta">> & { transformedHtml?: string, meta?: any }
 
    const entries: NormalizedEntry[] = []
    const name = 'plugin-universal'
@@ -128,7 +138,7 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
    async function loadEntryOutput({ ssrEntry }: NormalizedEntry) {
       let mod: any
       try {
-         mod = await server.ssrLoadModule(ssrEntry, { fixStacktrace: true })
+         mod = await server.ssrLoadModule(ssrEntry + '?' + name, { fixStacktrace: true })
       } catch (e) {
          return e
       }
@@ -149,10 +159,9 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
       }
       return output
    }
-
    return {
       name,
-      enforce: 'post', // Let Vite process HTML before us in build mode.
+      enforce: 'post',
       configureServer(_server) {
          server = _server
          function createHandler(entry: NormalizedEntry | '404'): Connect.NextHandleFunction {
@@ -197,18 +206,25 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
       },
       async configResolved(_config) {
          config = _config
+         if(!path.isAbsolute(config.base)) {
+            logger.error('config.base is not absolute path! THis plugin can produce correct output only if config.base is absolute path.')
+            logger.error('Also, make sure all script sources are defined as absolute paths in your HTML entries.')
+            return
+         }
          root = path.resolve(config.root)
          options.entries ??= './**/*.page.{ts,tsx,mts}'
          const rawEntries: Entry<TOutput>[] = []
 
-         if (typeof options.entries === 'string') {
+         if (typeof options.entries == 'string') {
             const files = await glob(options.entries, {
                ignore: ['node_modules', '.git', 'dist'],
                nodir: true,
             })
 
             for (const file of files) {
-               const entry = await server.ssrLoadModule(file).then(r => r.default as Entry<TOutput>)
+               const entry = await server
+                  .ssrLoadModule(file + '?' + name)
+                  .then(r => r.default as Entry<TOutput>)
                if (!entry) {
                   logger.error(`Couldn't load entry ${file}. Make sure it has "default" export`)
                   continue
@@ -302,15 +318,18 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
             server: false,
          })
       },
-      async transform(code, url, opts) {
-         const [id, qs] = url.split('?')
-         // if (!qs?.includes('plugin-universal')) return null
-         if (!options.ssrEntryTransformHook) {
-            return null
-         }
-         const entry = entries.find(e => e.ssrEntry === id)
-         const result = await options.ssrEntryTransformHook(entry, code, url, opts)
-         return result
+      transform: {
+         order: 'pre',
+         async handler(code, url, opts) {
+            const [id, qs] = url.split('?')
+            if (!qs?.includes('plugin-universal')) return null
+            if (!options.ssrEntryTransformHook) {
+               return null
+            }
+            const entry = entries.find(e => e.ssrEntry === id)
+            const result = await options.ssrEntryTransformHook(this, server, entry, code, id, opts)
+            return result
+         },
       },
       generateBundle(_, bundle) {
          const outputs = Object.entries(bundle)

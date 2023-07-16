@@ -431,36 +431,6 @@ function hydrate$1(code, element, options = {}) {
   sharedConfig.context = null;
   return dispose;
 }
-function getNextElement(template) {
-  let node, key;
-  if (!sharedConfig.context || !(node = sharedConfig.registry.get(key = getHydrationKey()))) {
-    if (sharedConfig.context) console.warn("Unable to find DOM nodes for hydration key:", key);
-    if (!template) throw new Error("Unrecoverable Hydration Mismatch. No template for key: " + key);
-    return template();
-  }
-  if (sharedConfig.completed) sharedConfig.completed.add(node);
-  sharedConfig.registry.delete(key);
-  return node;
-}
-function getNextMarker(start) {
-  let end = start,
-    count = 0,
-    current = [];
-  if (sharedConfig.context) {
-    while (end) {
-      if (end.nodeType === 8) {
-        const v = end.nodeValue;
-        if (v === "#") count++;else if (v === "/") {
-          if (count === 0) return [end, current];
-          count--;
-        }
-      }
-      current.push(end);
-      end = end.nextSibling;
-    }
-  }
-  return [end, current];
-}
 function insertExpression(parent, value, current, marker, unwrapArray) {
   if (sharedConfig.context) {
     !current && (current = [...parent.childNodes]);
@@ -588,13 +558,9 @@ function gatherHydratable(element, root) {
     if ((!root || key.startsWith(root)) && !sharedConfig.registry.has(key)) sharedConfig.registry.set(key, node);
   }
 }
-function getHydrationKey() {
-  const hydrate = sharedConfig.context;
-  return `${hydrate.id}${hydrate.count++}`;
-}
 const hydrate = (...args) => {
   enableHydration();
   return hydrate$1(...args);
 };
 
-export { createEffect as a, getNextMarker as b, createSignal as c, getNextElement as g, hydrate as h, insert as i, onCleanup as o, render as r, setAttribute as s, template as t };
+export { createEffect as a, createSignal as c, hydrate as h, insert as i, onCleanup as o, render as r, setAttribute as s, template as t };

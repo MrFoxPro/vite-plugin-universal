@@ -1,6 +1,6 @@
-import { c as createSignal, a as createEffect, g as getNextElement, b as getNextMarker, i as insert, o as onCleanup, t as template, h as hydrate } from './assets/web.js';
+import { c as createSignal, a as createEffect, i as insert, t as template, o as onCleanup, h as hydrate } from './assets/web.js';
 
-const _tmpl$ = /* @__PURE__ */ template(`<h1>Learn Civet <!#><!/>`);
+const _tmpl$ = /* @__PURE__ */ template(`<h1>Learn Civet `);
 const App = function() {
   const [counter, setCounter] = createSignal(0);
   createEffect(function() {
@@ -12,8 +12,8 @@ const App = function() {
     });
   });
   return (() => {
-    const _el$ = getNextElement(_tmpl$), _el$2 = _el$.firstChild, _el$3 = _el$2.nextSibling, [_el$4, _co$] = getNextMarker(_el$3.nextSibling);
-    insert(_el$, counter, _el$4, _co$);
+    const _el$ = _tmpl$(); _el$.firstChild;
+    insert(_el$, counter, null);
     return _el$;
   })();
 };
