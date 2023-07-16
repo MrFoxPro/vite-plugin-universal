@@ -47,4 +47,24 @@ dist
 ```
 Check out example to see how it works.
 
-Also, make sure to specify absolute paths to assets and modules in your html templates and ensure you have `base: '/'` in your Vite configuration.
+⚠ Make sure to specify absolute paths to assets and modules in your html templates and ensure you have `base: '/'` in your Vite configuration.
+
+Custom SSR entry transforming:
+```ts
+async ssrEntryTransformHook(ctx, server, entry, code, id, options) {
+    // We can do simple hack
+    solidOptions.solid.generate = 'ssr'
+    solidOptions.solid.hydratable = false
+    const result = await server.transformRequest(id, { ssr: true })
+    solidOptions.solid.generate = 'dom'
+    return result
+
+    // Or completely transform code as we need.
+    const solidPlugin = server.config.plugins.find(plugin => plugin.name == 'solid')
+    if (typeof solidPlugin.transform === 'function') {
+      // Here we can customize transformation of our SSR entry
+      const transformed = await solidPlugin.transform.call(this, code, id, options)
+      return transformed
+    }
+},
+```

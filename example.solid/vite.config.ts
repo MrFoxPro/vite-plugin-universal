@@ -70,7 +70,6 @@ export default async ({ mode }: ConfigEnv) => {
             applyOutput({ head, body }, template) {
                return template.replace('<!--head-->', head.join('\n')).replace('<!--body-->', body.join('\n'))
             },
-            // options here will contains ssr: true
             async ssrEntryTransformHook(ctx, server, entry, code, id, options) {
                // We can do simple hack
                solidOptions.solid.generate = 'ssr'
