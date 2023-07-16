@@ -1,7 +1,7 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "extends": ["plugin:import/typescript", "@unocss"],
+  "extends": ["plugin:import/typescript"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
@@ -10,9 +10,6 @@
   "plugins": ["@typescript-eslint", "import", "prettier"],
   "settings": {
     "import/resolver": {
-      "typescript": {
-        "project": ["./tsconfig.json"]
-      },
       "node": true
     },
     "import/parsers": {

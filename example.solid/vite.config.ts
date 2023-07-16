@@ -1,12 +1,12 @@
 import path from 'node:path'
 
 import ViteSolid from 'vite-plugin-solid'
+import VitePluginInspect from 'vite-plugin-inspect'
+import VitePluginCivet from 'vite-plugin-civet'
 import type { ConfigEnv, UserConfig } from 'vite'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import remarkFrontmatter from 'remark-frontmatter'
 import RollupMdx from '@mdx-js/rollup'
-import VitePluginCivet from 'vite-plugin-civet'
-import VitePluginInspect from 'vite-plugin-inspect'
 
 import ViteUniversalPlugin from '../index'
 export default async ({ mode }: ConfigEnv) => {

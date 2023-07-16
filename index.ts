@@ -3,6 +3,7 @@ import * as path from 'node:path'
 import * as fs from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { Console } from 'node:console'
+
 import type { Plugin, ViteDevServer, ResolvedConfig, Connect, Rollup } from 'vite'
 import { createLogger, createServer, normalizePath } from 'vite'
 import { glob } from 'glob'
@@ -66,7 +67,7 @@ export type UniversalPluginOptions<TOutput> = {
          id: string,
          options?: {
             ssr?: boolean
-         }
+         },
       ]
    ) => Rollup.TransformResult | Promise<Rollup.TransformResult>
 
@@ -91,7 +92,10 @@ export type UniversalPluginOptions<TOutput> = {
 }
 
 export default function <TOutput = unknown>(options: UniversalPluginOptions<TOutput>): Plugin {
-   type NormalizedEntry<T = TOutput> = Required<Omit<Entry<T>, "meta">> & { transformedHtml?: string, meta?: any }
+   type NormalizedEntry<T = TOutput> = Required<Omit<Entry<T>, 'meta'>> & {
+      transformedHtml?: string
+      meta?: any
+   }
 
    const entries: NormalizedEntry[] = []
    const name = 'plugin-universal'
@@ -206,9 +210,13 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
       },
       async configResolved(_config) {
          config = _config
-         if(!path.isAbsolute(config.base)) {
-            logger.error('config.base is not absolute path! THis plugin can produce correct output only if config.base is absolute path.')
-            logger.error('Also, make sure all script sources are defined as absolute paths in your HTML entries.')
+         if (!path.isAbsolute(config.base)) {
+            logger.error(
+               'config.base is not absolute path! THis plugin can produce correct output only if config.base is absolute path.'
+            )
+            logger.error(
+               'Also, make sure all script sources are defined as absolute paths in your HTML entries.'
+            )
             return
          }
          root = path.resolve(config.root)
