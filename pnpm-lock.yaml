@@ -54,9 +54,6 @@ importers:
       '@vite-plugin-universal/example-solid':
         specifier: link:/home/foxpro/craft/vite-plugin-universal/example.solid
         version: 'link:'
-      cd:
-        specifier: ^0.3.3
-        version: 0.3.3
       remark-frontmatter:
         specifier: ^4.0.1
         version: 4.0.1
@@ -1278,10 +1275,6 @@ packages:
 
   /ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
-    dev: true
-
-  /cd@0.3.3:
-    resolution: {integrity: sha512-X2y0Ssu48ucdkrNgCdg6k3EZWjWVy/dsEywUUTeZEIW31f3bQfq65Svm+TzU1Hz+qqhdmyCdjGhUvRsSKHl/mw==}
     dev: true
 
   /chalk@2.4.2:

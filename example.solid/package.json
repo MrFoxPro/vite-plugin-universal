@@ -9,7 +9,6 @@
    "devDependencies": {
       "@mdx-js/rollup": "^2.3.0",
       "@vite-plugin-universal/example-solid": "link:/home/foxpro/craft/vite-plugin-universal/example.solid",
-      "cd": "^0.3.3",
       "remark-frontmatter": "^4.0.1",
       "remark-mdx-frontmatter": "^3.0.0",
       "solid-js": "^1.7.8",
