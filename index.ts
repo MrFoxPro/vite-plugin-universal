@@ -8,7 +8,7 @@ import type { Plugin, ViteDevServer, ResolvedConfig, Connect, Rollup } from 'vit
 import { createLogger, createServer, normalizePath } from 'vite'
 import { glob } from 'glob'
 
-type Entry<TOutput> = {
+type Entry = {
    /**
     * Path to html template relative from project root
     * @example blog/index.html
@@ -38,7 +38,7 @@ type Entry<TOutput> = {
    /**
     * Apply output to template
     */
-   applyOutput?: (output: TOutput, template: string) => string | Promise<string>
+   applyOutput?: <TOutput>(output: TOutput, template: string) => string | Promise<string>
 
    /**
     * Show when route wasn't found (404)
@@ -50,8 +50,8 @@ type Entry<TOutput> = {
     */
    meta?: any
 }
-export type EntryConfiguration<T> = Omit<Entry<T>, 'ssrEntry'> & {}
-export type UniversalPluginOptions<TOutput> = {
+export type EntryConfiguration<T> = Omit<Entry, 'ssrEntry'> & {}
+export type UniversalPluginOptions = {
    /**
     *
     * @param entry entry specified in options.entries
@@ -60,7 +60,7 @@ export type UniversalPluginOptions<TOutput> = {
    ssrEntryTransformHook?: (
       ctx: Rollup.PluginContext,
       server: ViteDevServer,
-      entry: Entry<TOutput>,
+      entry: Entry,
       // IDK how to infer this cringy Vite type
       ...viteOptions: [
          code: string,
@@ -77,13 +77,13 @@ export type UniversalPluginOptions<TOutput> = {
     * Or list them manually
     * `**.page.{ts,tsx,mts}`
     */
-   entries: string | Entry<TOutput>[]
+   entries: string | Entry[]
    /**
     * Render entry output to template
     *
     * Will be replaced by entry output if specified
     */
-   applyOutput?: Entry<TOutput>['applyOutput']
+   applyOutput?: Entry['applyOutput']
 
    /**
     * Wether not to delete HTML produced by Vite at build time
@@ -91,8 +91,8 @@ export type UniversalPluginOptions<TOutput> = {
    keepOriginalHtml?: boolean
 }
 
-export default function <TOutput = unknown>(options: UniversalPluginOptions<TOutput>): Plugin {
-   type NormalizedEntry<T = TOutput> = Required<Omit<Entry<T>, 'meta'>> & {
+export default function <TOutput = unknown>(options: UniversalPluginOptions): Plugin {
+   type NormalizedEntry<T = TOutput> = Required<Omit<Entry, 'meta'>> & {
       transformedHtml?: string
       meta?: any
    }
@@ -221,7 +221,7 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
          }
          root = path.resolve(config.root)
          options.entries ??= './**/*.page.{ts,tsx,mts}'
-         const rawEntries: Entry<TOutput>[] = []
+         const rawEntries: Entry[] = []
 
          if (typeof options.entries == 'string') {
             const files = await glob(options.entries, {
@@ -230,9 +230,7 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
             })
 
             for (const file of files) {
-               const entry = await server
-                  .ssrLoadModule(file + '?' + name)
-                  .then(r => r.default as Entry<TOutput>)
+               const entry = await server.ssrLoadModule(file + '?' + name).then(r => r.default as Entry)
                if (!entry) {
                   logger.error(`Couldn't load entry ${file}. Make sure it has "default" export`)
                   continue
