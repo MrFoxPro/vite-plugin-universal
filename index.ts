@@ -50,7 +50,10 @@ type Entry = {
     */
    meta?: any
 }
-export type EntryConfiguration = Omit<Entry, 'ssrEntry'> & {}
+export type EntryConfiguration = Omit<Entry, 'ssrEntry'> & {
+   output(): any | Promise<any>
+}
+
 export type UniversalPluginOptions = {
    /**
     *
