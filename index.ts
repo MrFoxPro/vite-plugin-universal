@@ -81,9 +81,9 @@ export type UniversalPluginOptions<TOutput> = {
    /**
     * Render entry output to template
     *
-    * Will be replaced by entry renderResult if specified
+    * Will be replaced by entry output if specified
     */
-   applyOutput?: (renderResult: TOutput, template: string) => string | Promise<string>
+   applyOutput?: Entry<TOutput>['applyOutput']
 
    /**
     * Wether not to delete HTML produced by Vite at build time
@@ -320,10 +320,12 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions<TOut
                opts.input[inputKey] = entry.templatePath
             }
          }
-         logger.info('Starting server to prerender static pages')
+         logger.info('Starting sesrver to prerender static pages')
          server = await createServer({
             // @ts-ignore Ensure we will not listen server
-            server: false,
+            server: {
+               middlewareMode: true,
+            },
          })
       },
       transform: {

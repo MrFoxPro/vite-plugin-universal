@@ -1,7 +1,7 @@
 {
    "type": "module",
    "name": "vite-plugin-universal",
-   "version": "0.1.2",
+   "version": "0.1.3",
    "description": "Plugin that introduce advanced configurations for pages, allowing to mix SSG, SPA and SSG+JS pages.",
    "main": "./dist/cjs/index.js",
    "module": "./dist/es/index.js",
@@ -22,8 +22,8 @@
    },
    "keywords": [
       "vite",
-      "vite plugin",
-      "ssg"
+      "vite-plugin",
+      "SSG"
    ],
    "author": "foxpro tuningiposadka@gmail.com",
    "license": "MIT",
