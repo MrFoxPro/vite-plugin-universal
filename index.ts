@@ -38,7 +38,7 @@ type Entry = {
    /**
     * Apply output to template
     */
-   applyOutput?: <TOutput>(output: TOutput, template: string) => string | Promise<string>
+   applyOutput?(output: any, template: string): string | Promise<string>
 
    /**
     * Show when route wasn't found (404)
@@ -50,7 +50,7 @@ type Entry = {
     */
    meta?: any
 }
-export type EntryConfiguration<T> = Omit<Entry, 'ssrEntry'> & {}
+export type EntryConfiguration = Omit<Entry, 'ssrEntry'> & {}
 export type UniversalPluginOptions = {
    /**
     *
@@ -91,8 +91,8 @@ export type UniversalPluginOptions = {
    keepOriginalHtml?: boolean
 }
 
-export default function <TOutput = unknown>(options: UniversalPluginOptions): Plugin {
-   type NormalizedEntry<T = TOutput> = Required<Omit<Entry, 'meta'>> & {
+export default function (options: UniversalPluginOptions): Plugin {
+   type NormalizedEntry = Required<Omit<Entry, 'meta'>> & {
       transformedHtml?: string
       meta?: any
    }
@@ -155,9 +155,9 @@ export default function <TOutput = unknown>(options: UniversalPluginOptions): Pl
          return error
       }
       const config = mod.default
-      let output: TOutput
+      let output: any
       try {
-         output = (await config.output()) as TOutput
+         output = await config.output()
       } catch (e) {
          return e
       }
