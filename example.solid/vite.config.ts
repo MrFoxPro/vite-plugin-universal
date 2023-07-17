@@ -46,7 +46,15 @@ export default async ({ mode }: ConfigEnv) => {
             outputExtension: 'tsx',
             outputTransformerPlugin: 'solid',
          }),
-         ViteSolid(solidOptions),
+         ViteSolid({
+            hot: dev,
+            dev: dev,
+            extensions: ['.md', '.mdx', '.ts', '.tsx'],
+            solid: {
+               generate: 'ssr',
+               hydratable: true,
+            },
+         }),
          ViteUniversalPlugin<{ head: string[]; body: string[] }>({
             entries: [
                {

@@ -397,20 +397,6 @@ function render(code, element, init, options = {}) {
     element.textContent = "";
   };
 }
-function template(html, isCE, isSVG) {
-  let node;
-  const create = () => {
-    const t = document.createElement("template");
-    t.innerHTML = html;
-    return isSVG ? t.content.firstChild.firstChild : t.content.firstChild;
-  };
-  const fn = isCE ? () => untrack(() => document.importNode(node || (node = create()), true)) : () => (node || (node = create())).cloneNode(true);
-  fn.cloneNode = fn;
-  return fn;
-}
-function setAttribute(node, name, value) {
-  if (value == null) node.removeAttribute(name);else node.setAttribute(name, value);
-}
 function insert(parent, accessor, marker, initial) {
   if (marker !== undefined && !initial) initial = [];
   if (typeof accessor !== "function") return insertExpression(parent, accessor, initial, marker);
@@ -558,9 +544,13 @@ function gatherHydratable(element, root) {
     if ((!root || key.startsWith(root)) && !sharedConfig.registry.has(key)) sharedConfig.registry.set(key, node);
   }
 }
+function ssr(template, ...nodes) {}
+function ssrAttribute(key, value) {}
+function ssrHydrationKey() {}
+function escape(html) {}
 const hydrate = (...args) => {
   enableHydration();
   return hydrate$1(...args);
 };
 
-export { createEffect as a, createSignal as c, hydrate as h, insert as i, onCleanup as o, render as r, setAttribute as s, template as t };
+export { createEffect as a, ssrHydrationKey as b, createSignal as c, ssrAttribute as d, escape as e, hydrate as h, onCleanup as o, render as r, ssr as s };

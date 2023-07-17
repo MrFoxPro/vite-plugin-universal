@@ -1,6 +1,6 @@
-import { c as createSignal, a as createEffect, i as insert, t as template, o as onCleanup, h as hydrate } from './assets/web.js';
+import { c as createSignal, a as createEffect, s as ssr, e as escape, b as ssrHydrationKey, o as onCleanup, h as hydrate } from './assets/web.js';
 
-const _tmpl$ = /* @__PURE__ */ template(`<h1>Learn Civet `);
+const _tmpl$ = ["<h1", ">Learn Civet <!--#-->", "<!--/--></h1>"];
 const App = function() {
   const [counter, setCounter] = createSignal(0);
   createEffect(function() {
@@ -11,11 +11,7 @@ const App = function() {
       return clearInterval(interval);
     });
   });
-  return (() => {
-    const _el$ = _tmpl$(); _el$.firstChild;
-    insert(_el$, counter, null);
-    return _el$;
-  })();
+  return ssr(_tmpl$, ssrHydrationKey(), escape(counter()));
 };
 
 hydrate(App, document.body);
